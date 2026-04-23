@@ -10,16 +10,15 @@ Thread 2 runs only for 5 iterations and then aborts.
 
 ## Problems seen:
 - Since the two threads share a common running flag, as soon as one of the thread terminates, the other terminates automatically as well. 
-If both loops need to run independent of each other, we need to use separate running flags for each of them. 
+If both loops need to run independent of each other, we need to use separate running flags for each of them. However the program seems to be testing a race between counters.
 
-- Additionally, since "Process" and "timeout" are local to the startThread function, capturing them by reference leads to dangling reference within the lambda.
+- Additionally, since "Process" and "timeout" are local to the startThread function, capturing them by reference leads to dangling reference within the lambda since they go out of scope as soon as StartThread() is done.
 
 ## Fix: 
 - Capture Process and Timeout explicitly as a copy instead of a reference.
-- Use separate running flags for each of the threads.
 
 ## Expectation: 
-Both loops should have a counter value of 5 at the end of the program.
+Both loops should have a counter value of 3, 5 at the end of the program.
 
 ## Result:
-C1: 5 C2: 5
+C1: 3 C2: 5
